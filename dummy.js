@@ -1,0 +1,4 @@
+ const regexPassword = /^[a-zA-Z0-9]{6,30}$/;
+
+
+ console.log(regexPassword.test('ffdsfdsfdfdsfdsfdsfsdfsdfdsfdskfdsfldsfsfdfdfdfsdfdfdfdfsdfdsflsdflsdfldsfldsfsdlfdslfdsffdsfldsfds;fdsfldsfldsfl;dsfdsfdsfdfdsjfhsdfsdfsdfsdjklfsdjkfdsjkfdsjfkdsfjdfjfjksfdsfdsfdsklfdsfksdfdsklfdsfkdsfdsfk;dfkldsfjkldsfkldjklfdjkfdjkrklefjdjferejreirirerjvdfjkgvdfvjkcjkdfjkgddfkjlgdfddffdsfdfdksjfkjdsfkjdsfjkdskjfdksjlfdsf'))

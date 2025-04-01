@@ -1,0 +1,35 @@
+.error {
+  color: red;
+  font-size: medium;
+  margin-left: 10px;
+}
+.authContainer {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  background-image: url("../../../assets/login.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 20px;
+}
+
+.authInnerDiv {
+  border: 1px solid gray;
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.authHeading {
+  text-align: center;
+  margin-bottom: 15px;
+  color: rgb(18, 219, 206);
+}
+
+.form {
+  max-width: 600px;
+  width: 100%;
+}
