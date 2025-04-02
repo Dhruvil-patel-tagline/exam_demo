@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Table from "../../shared/Table";
@@ -8,9 +8,7 @@ import { studentResultHeader } from "../../utils/staticObj";
 const StudentResult = () => {
   const { state } = useLocation();
   const user = getCookie("authUser") || {};
-  if (state?.Result?.[0]?.rank === 1) {
-    toast.success("🎉 Congratulations! You've achieved the top rank.");
-  }
+
   const tableData = useMemo(() => {
     return state?.Result.map((res, index) => ({
       Index: index + 1,
@@ -29,6 +27,13 @@ const StudentResult = () => {
         ),
     }));
   }, [state]);
+
+  useEffect(() => {
+    if (state?.Result?.[0]?.rank === 1) {
+      toast.success("🎉 Congratulations! You've achieved the top rank.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="studentResultContainer">

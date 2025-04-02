@@ -18,7 +18,6 @@ const NewPassword = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({ password: "", confirmPassword: "" });
-  
   const user = {
     Password: data.password,
     ConfirmPassword: data.confirmPassword,
@@ -48,10 +47,10 @@ const NewPassword = () => {
       );
       if (response?.statusCode === 200) {
         toast.success(response?.message);
-        setTimeout(()=>{
-          window.open('/login',"_blank");
+        setTimeout(() => {
+          window.open("/login", "_blank");
           window.close();
-        },5000)
+        }, 5000);
         setData({ password: "", confirmPassword: "" });
       } else {
         toast.error(response?.message);
@@ -60,6 +59,21 @@ const NewPassword = () => {
       setLoading(false);
     }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value.trim() });
+    if (errors[name]) {
+      let error = {};
+      if (name === "confirmPassword") {
+        error = validate(name, value, data.password);
+      } else {
+        error = validate(name, value);
+      }
+      setErrors({ ...errors, [name]: error });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = {};
@@ -74,20 +88,6 @@ const NewPassword = () => {
       }));
     } else {
       Object.values(error).every((val) => !val) && fetchData();
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
-    if (errors[name]) {
-      let error = {};
-      if (name === "confirmPassword") {
-        error = validate(name, value, data.password);
-      } else {
-        error = validate(name, value);
-      }
-      setErrors({ ...errors, [name]: error });
     }
   };
 

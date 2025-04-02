@@ -9,15 +9,14 @@ import validate from "../../utils/validate";
 import "./css/auth.css";
 
 const ForgetPassword = () => {
-  const navigate = useNavigate();
-  
+  const navigate = useNavigate(); 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const value = e.target.value;
-    setEmail(value);
+    setEmail(value.trim());
     if (error) {
       setError(validate(e.target.name, value));
     }
@@ -42,12 +41,10 @@ const ForgetPassword = () => {
   };
 
   const handleSubmit = (e) => {
-    setError("");
     e.preventDefault();
     let emailValidate = validate("email", email);
-    if (emailValidate) {
-      setError(emailValidate);
-    } else {
+    setError(emailValidate);
+    if (!emailValidate) {
       searchUser();
     }
   };
@@ -66,14 +63,7 @@ const ForgetPassword = () => {
             value={email}
             onChange={handleChange}
           />
-          <div
-            style={{
-              display: "flex",
-              gap: "20px",
-              marginTop: "20px",
-              flexWrap: "wrap",
-            }}
-          >
+          <div className="forgotInner">
             <ButtonCom type="button" onClick={() => navigate(-1)}>
               Back
             </ButtonCom>

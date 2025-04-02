@@ -12,7 +12,6 @@ import "./css/auth.css";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(userObj);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(errorObj);
@@ -21,7 +20,7 @@ const Login = () => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
     if (error[name]) {
-      const errors = validate(name, value);
+      const errors = validate(name, value.trim());
       setError({ ...error, [name]: errors });
     }
   };

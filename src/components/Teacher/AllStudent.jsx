@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +18,11 @@ const AllStudent = () => {
 
   const [allStudent, setAllStudent] = useState(true);
   const [data, setData] = useState([]);
-  const verifiedStudent =
-    !!allStudentArray?.allStudent.length &&
-    allStudentArray?.allStudent.filter((val) => val.status === "Active");
+  const verifiedStudent = useMemo(() => {
+    return allStudentArray?.allStudent.length
+      ? allStudentArray?.allStudent.filter((val) => val.status === "Active")
+      : [];
+  });
 
   useEffect(() => {
     dispatch(allStudentList("dashboard/Teachers", token));

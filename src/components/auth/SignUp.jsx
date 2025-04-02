@@ -20,7 +20,7 @@ const SignUp = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...user, [name]: value.trim() });
     if (error[name]) {
       const errors = validate(name, value);
       setError({ ...error, [name]: errors });

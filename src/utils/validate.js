@@ -31,3 +31,20 @@ export const validateEmpty = (name, text) => {
   if (!name.trim()) return ` ${text} is required`;
   return null;
 };
+
+export const uniqueOpt = (optArray) => {
+  return optArray.every((val, index, arr) => {
+    if (!val) {
+      return true;
+    }
+    return arr.every((val2, idx) => {
+      if (idx == index) {
+        return true;
+      } else if (!val2) {
+        return true;
+      } else {
+        return val2.trim() !== val.trim();
+      }
+    });
+  });
+};

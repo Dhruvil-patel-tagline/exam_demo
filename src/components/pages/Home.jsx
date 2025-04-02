@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import Footer from '../layout/Footer';
+import Footer from "../layout/Footer";
 import Navbar from "../layout/Navbar";
+import "./pages.css";
 
 const Home = () => {
   const { pathname } = useLocation();
@@ -9,15 +10,9 @@ const Home = () => {
     return <Navigate to="/dashboard" />;
   }
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="homeContainer">
       <Navbar />
-      <div style={{ marginTop: "20px", flex: "1" }}>
+      <div className="homeInner">
         <Outlet />
       </div>
       <Footer />

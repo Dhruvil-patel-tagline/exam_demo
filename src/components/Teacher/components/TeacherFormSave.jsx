@@ -3,20 +3,21 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import cancel from "../../assets/cancel.png";
+import left from "../../assets/left.png";
+import right from "../../assets/right.png";
 import { createExam, updateExam } from "../../redux/action/examActions";
 import ButtonCom from "../../shared/ButtonCom";
 import InputCom from "../../shared/InputCom";
 import Loader from "../../shared/Loader";
+import RadioCom from "../../shared/RadioCom";
 import { getCookie } from "../../utils/getCookie";
 import {
   questionsErrorObj,
   teacherErrorObj,
   TOTAL_QUESTIONS,
 } from "../../utils/staticObj";
-import validate, { uniqueOpt } from "../../utils/validate";
-import Buttons from "./components/Buttons";
-import Questions from "./components/Questions";
-import SubmitCancelBtn from "./components/SubmitCancelBtn";
+import validate from "../../utils/validate";
 import "./css/teacher.css";
 
 const TeacherForm = () => {
@@ -26,6 +27,7 @@ const TeacherForm = () => {
   const navigate = useNavigate();
   const { state, pathname } = useLocation();
   const isUpdateForm = pathname.includes("updateExam");
+
   const [currentQuestion, setCurrentQuestion] = useState(state?.currentQ || 0);
   const [allQuestionError, setAllQuestionError] = useState(
     Array(TOTAL_QUESTIONS).fill(false),
@@ -52,6 +54,26 @@ const TeacherForm = () => {
     return examData.questions.some(
       (q, i) => i !== index && q?.question?.trim() === value?.trim(),
     );
+  };
+
+  const handleInputChange = (index, e) => {
+    const value = e.target.value;
+    const updatedQuestions = [...examData.questions];
+    updatedQuestions[index] = {
+      ...updatedQuestions[index],
+      [e.target.name]: value,
+    };
+
+    setExamData({ ...examData, questions: updatedQuestions });
+    if (questionsError["questionError"]) {
+      let error = null;
+      if (!value.trim()) {
+        error = "Question cannot be empty";
+      } else if (isDuplicateQuestion(index, value)) {
+        error = "Duplicate question not allowed";
+      }
+      setQuestionsError({ ...questionsError, questionError: error });
+    }
   };
 
   const handleQueValidate = (index) => {
@@ -105,6 +127,37 @@ const TeacherForm = () => {
     return allQue;
   };
 
+  function uniqueOpt(optArray) {
+    return optArray.every((val, index, arr) => {
+      if (!val) {
+        return true;
+      }
+      return arr.every((val2, idx) => {
+        if (idx == index) {
+          return true;
+        } else if (!val2) {
+          return true;
+        } else {
+          return val2.trim() !== val.trim();
+        }
+      });
+    });
+  }
+
+  const handleOptionChange = (qIndex, optIndex, value) => {
+    const updatedQuestions = [...examData.questions];
+    updatedQuestions[qIndex].options[optIndex] = value;
+    if (!uniqueOpt(updatedQuestions[qIndex].options)) {
+      setQuestionsError({
+        ...questionsError,
+        optionsError: "Same option not allowed",
+      });
+    } else {
+      setQuestionsError({ ...questionsError, optionsError: "" });
+    }
+    updatedQuestions[qIndex].answer = "";
+    setExamData({ ...examData, questions: updatedQuestions });
+  };
   const handleSubjectChange = (e) => {
     const value = e.target.value;
     setExamData({ ...examData, subjectName: value });
@@ -127,6 +180,16 @@ const TeacherForm = () => {
       setError({ ...error, noteError: notesError });
     }
     setExamData({ ...examData, notes: updatedNotes });
+  };
+
+  const handleAnswerChange = (index, value) => {
+    const updatedQuestions = [...examData.questions];
+    updatedQuestions[index].answer = value;
+    setQuestionsError({
+      ...questionsError,
+      answerError: value ? "" : "Answer is required",
+    });
+    setExamData({ ...examData, questions: updatedQuestions });
   };
 
   const handleValidate = useCallback(
@@ -197,7 +260,6 @@ const TeacherForm = () => {
       setAllQuestionError(Array(TOTAL_QUESTIONS).fill(true));
     }
   }, [isUpdateForm]);
-
   if (isUpdateForm) {
     if (!state?.questions) {
       return (
@@ -212,7 +274,6 @@ const TeacherForm = () => {
       );
     }
   }
-
   return (
     <div>
       <div style={{ paddingTop: "20px" }}>
@@ -241,19 +302,122 @@ const TeacherForm = () => {
               placeholder="Subject Name"
             />
             <label className="teacherLabel">Question</label>
-            <Questions
-              examData={examData}
-              setExamData={setExamData}
-              questionsError={questionsError}
-              setQuestionsError={setQuestionsError}
-              currentQuestion={currentQuestion}
-              isDuplicateQuestion={isDuplicateQuestion}
-            />
             <div>
-              <Buttons
-                currentQuestion={currentQuestion}
-                handleQuestionSave={handleQuestionSave}
-              />
+              <div className="allQuestionContainer">
+                <div style={{ marginBottom: "10px" }}>
+                  <label htmlFor="question">
+                    Question {currentQuestion + 1}
+                  </label>
+                  {questionsError?.questionError && (
+                    <span className="teacherError">
+                      {questionsError.questionError}
+                    </span>
+                  )}
+                  <InputCom
+                    name="question"
+                    type="text"
+                    placeholder="Enter question "
+                    id="question"
+                    value={examData?.questions[currentQuestion]?.question}
+                    onChange={(e) => handleInputChange(currentQuestion, e)}
+                  />
+                </div>
+                {questionsError?.optionsError && (
+                  <span className="teacherError">
+                    {questionsError.optionsError}
+                  </span>
+                )}
+                <div className="teacherOptionContainer">
+                  {examData?.questions[currentQuestion]?.options &&
+                    examData?.questions[currentQuestion]?.options.map(
+                      (opt, idx) => (
+                        <div key={idx}>
+                          <InputCom
+                            type="text"
+                            placeholder={`Option ${idx + 1}`}
+                            value={opt}
+                            onChange={(e) =>
+                              handleOptionChange(
+                                currentQuestion,
+                                idx,
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      ),
+                    )}
+                </div>
+                <div style={{ padding: "20px 0px" }}>
+                  <span style={{ marginRight: "10px", fontSize: "1.5rem" }}>
+                    Answer:
+                  </span>
+                  <span style={{ color: "green", fontSize: "1.5rem" }}>
+                    {examData?.questions[currentQuestion]?.answer}
+                  </span>
+                  {questionsError?.answerError && (
+                    <span className="teacherError">
+                      {questionsError?.answerError}
+                    </span>
+                  )}
+                </div>
+                <div className="subTeacherContainer">
+                  {examData?.questions[currentQuestion]?.options &&
+                    examData?.questions[currentQuestion]?.options.map(
+                      (opt, idx) => {
+                        if (!opt) return;
+                        return (
+                          <div
+                            key={idx}
+                            style={{ display: "flex", flexWrap: "wrap" }}
+                          >
+                            <RadioCom
+                              name={`answer-${currentQuestion}`}
+                              value={opt}
+                              checked={
+                                examData.questions[currentQuestion].answer ===
+                                opt
+                              }
+                              onChange={(e) =>
+                                handleAnswerChange(
+                                  currentQuestion,
+                                  e.target.value,
+                                )
+                              }
+                              text={opt}
+                            />
+                          </div>
+                        );
+                      },
+                    )}
+                </div>
+              </div>
+              <div className="btnGroup">
+                <ButtonCom
+                  type="button"
+                  disabled={currentQuestion === 0}
+                  onClick={() => {
+                    handleQuestionSave(currentQuestion, "previous");
+                  }}
+                >
+                  <span className="bntIcon">
+                    <img src={left} height="15px" width="15px" />
+                    Previous
+                  </span>
+                </ButtonCom>
+                <ButtonCom
+                  type="button"
+                  disabled={currentQuestion === TOTAL_QUESTIONS - 1}
+                  onClick={() => {
+                    handleQuestionSave(currentQuestion, "next");
+                  }}
+                >
+                  <span className="bntIcon">
+                    Next
+                    <img src={right} height="15px" width="15px" />
+                  </span>
+                </ButtonCom>
+              </div>
             </div>
             <label style={{ fontSize: "20px" }}>Notes</label>
             {error?.noteError && (
@@ -268,7 +432,26 @@ const TeacherForm = () => {
                 onChange={(e) => handleNoteChange(index, e.target.value)}
               />
             ))}
-            <SubmitCancelBtn isUpdateForm={isUpdateForm} />
+            <div className="btnSecondContainer">
+              <ButtonCom
+                color="red"
+                type="reset"
+                style={{ backgroundColor: "gray" }}
+              >
+                <span className="bntIcon">
+                  <img src={cancel} height="15px" width="15px" />
+                  Cancel
+                </span>
+              </ButtonCom>
+
+              <ButtonCom type="submit">
+                {isUpdateForm ? (
+                  <span style={{ color: "blue" }}>Update</span>
+                ) : (
+                  <span style={{ color: "green" }}>Submit</span>
+                )}
+              </ButtonCom>
+            </div>
           </form>
         </div>
       </div>

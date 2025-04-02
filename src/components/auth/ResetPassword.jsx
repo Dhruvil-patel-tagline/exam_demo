@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPasswordObj({ ...passwordObj, [name]: value });
+    setPasswordObj({ ...passwordObj, [name]: value.trim() });
     let errors = {};
     if (error[name]) {
       if (name === "confirmPassword") {
@@ -79,33 +79,11 @@ const ResetPassword = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        marginTop: "10px",
-      }}
-    >
+    <div className="resetPasswordContainer">
       {loading && <Loader />}
-      <div
-        style={{
-          maxWidth: "600px",
-          width: "100%",
-          padding: "20px",
-          border: "1px solid gray",
-          borderRadius: "10px",
-          margin: "20px",
-        }}
-      >
-        <form
-          onSubmit={handleSubmit}
-          style={{ maxWidth: "600px", width: "100%" }}
-        >
-          <h1 style={{ textAlign: "center", color: "rgb(18, 219, 206)" }}>
-            Reset password
-          </h1>
+      <div className="resetPasswordInner">
+        <form onSubmit={handleSubmit} className="resetPassForm">
+          <h1 className="resetPassHeading">Reset password</h1>
           <br />
           <label htmlFor="oldPassword">Old Password:</label>
           {error?.oldPassword && (
@@ -153,20 +131,14 @@ const ResetPassword = () => {
                 setError(resetPasswordObj);
               }}
             >
-              <span
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap:"5px",
-                  color:"red"
-                }}
-              >
+              <span className="btnIcon">
                 <img src={cancel} height="15px" width="15px" />
                 Cancel
               </span>
             </ButtonCom>
-            <ButtonCom type="submit" color='green'>Submit</ButtonCom>
+            <ButtonCom type="submit" color="green">
+              Submit
+            </ButtonCom>
           </div>
         </form>
       </div>

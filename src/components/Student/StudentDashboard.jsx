@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,9 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     dispatch(studentExamsAction());
+      localStorage.removeItem("selectedAnswerData");
+      localStorage.removeItem("timeLeftData");
+      localStorage.removeItem("questionData");
   }, [token]);
 
   const tableData = useMemo(() => {
