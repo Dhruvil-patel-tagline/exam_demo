@@ -15,35 +15,30 @@ import "./css/student.css";
 const ExamForm = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { id, subjectName, notes } = state;
   const dispatch = useDispatch();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentAnsIndex, setCurrentAnsIndex] = useState(0);
-
-  const [exam, setExam] = useState(() => {
-    let x = localStorage.getItem("questionData");
-    return x ? JSON.parse(x) : [];
-  });
-
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [remainingAnswer, setRemaining] = useState([]);
-
   const [remainingAnsMode, setRemAnsMode] = useState(false);
+  const [exam, setExam] = useState(
+    JSON.parse(localStorage.getItem("questionData")) || [],
+  );
   const [reviewMode, setReviewMode] = useState(() => {
     let x = localStorage.getItem("selectedAnswerData");
     return x && JSON.parse(x).some((value) => value.answer) ? true : false;
   });
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    let x = localStorage.getItem("questionData");
-    if (x) {
-      return;
+    if (!localStorage.getItem("questionData")) {
+      fetchData({ setLoading, id, setError, setExam, setSelectedAnswers });
     }
-    fetchData({ setLoading, id, setError, setExam, setSelectedAnswers });
   }, [id]);
 
   const handleAnswerSelect = (questionId, option) => {
@@ -76,8 +71,8 @@ const ExamForm = () => {
     setRemAnsMode(true);
   };
 
-  const submitExam = () => {
-    examFormSubmit({ setLoading, navigate, id, dispatch });
+  const submitExam = (val) => {
+    examFormSubmit({ setLoading, navigate, id, dispatch, val });
   };
 
   let remainingAnswerData = [];
@@ -93,7 +88,7 @@ const ExamForm = () => {
       if (!confirmSubmit) return;
     }
     setIsSubmitting(true);
-    submitExam();
+    submitExam("withoutNavigation");
   };
 
   useEffect(() => {

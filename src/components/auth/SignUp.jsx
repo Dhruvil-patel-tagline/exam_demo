@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonCom from "../../shared/ButtonCom";
@@ -7,13 +7,13 @@ import InputCom from "../../shared/InputCom";
 import InputPassword from "../../shared/InputPassword";
 import Loader from "../../shared/Loader";
 import { postRequest } from "../../utils/api";
-import { dropObj, signUpUserObj } from "../../utils/staticObj";
+import { dropObj, fields, signUpUserObj } from "../../utils/staticObj";
 import validate from "../../utils/validate";
 import "./css/auth.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(signUpUserObj);
   const [error, setError] = useState(signUpUserObj);
@@ -39,6 +39,7 @@ const SignUp = () => {
   const addUser = async () => {
     try {
       setLoading(true);
+      console.log(user);
       let response = await postRequest("users/SignUp", { data: user });
       if (response.statusCode === 200) {
         toast.success(response?.message);
@@ -64,45 +65,39 @@ const SignUp = () => {
       <div className="authInnerDiv">
         <form onSubmit={handleSubmit} className="form">
           <h1 className="authHeading">SignUp </h1>
-          <label htmlFor="name">Name:</label>
-          <span className="error">{error?.name}</span> <br />
-          <InputCom
-            type="text"
-            id="name"
-            name="name"
-            value={user?.name}
-            onChange={handleChange}
-          />
-          <br />
-          <label htmlFor="email">Email:</label>
-          <span className="error">{error?.email}</span> <br />
-          <InputCom
-            type="email"
-            value={user?.email}
-            onChange={handleChange}
-            id="email"
-            name="email"
-          />
-          <br />
-          <label htmlFor="password">Password:</label>
-          <span className="error">{error?.password}</span> <br />
-          <InputPassword
-            value={user?.password}
-            onChange={handleChange}
-            id="password"
-            name="password"
-          />
-          <br />
-          <label htmlFor="role">Role:</label>
-          <span className="error">{error?.role}</span> <br />
-          <DropDown
-            value={user?.role}
-            onChange={handleChange}
-            id="role"
-            name="role"
-            dropObj={dropObj}
-          />
-          <br />
+          {fields.map((val) => (
+            <Fragment key={val.id}>
+              <label htmlFor={val.id}>{val.name}</label>
+              <span className="error">{error[val.id]}</span>
+              {val.input === "input" ? (
+                <InputCom
+                  type={val.type}
+                  id={val.id}
+                  value={user[val.id]}
+                  name={val.id}
+                  onChange={handleChange}
+                  placeholder={val.placeholder}
+                />
+              ) : val.input === "password" ? (
+                <InputPassword
+                  id={val.id}
+                  value={user[val.id]}
+                  name={val.id}
+                  onChange={handleChange}
+                  placeholder={val.placeholder}
+                />
+              ) : (
+                <DropDown
+                  value={user[val.id]}
+                  id={val.id}
+                  name={val.id}
+                  onChange={handleChange}
+                  dropObj={dropObj}
+                />
+              )}
+              <br />
+            </Fragment>
+          ))}
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <ButtonCom type="submit">Sign Up</ButtonCom>
           </div>

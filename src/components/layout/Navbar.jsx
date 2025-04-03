@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import exam from "../../assets/exam.png";
 import logout from "../../assets/logout.svg";
@@ -14,6 +14,7 @@ import "./navbar.css";
 const Navbar = () => {
   const navigate = useNavigate();
   const [openNav, setOpenNav] = useState(false);
+  const location = useLocation();
   const user = getCookie("authUser");
   let navObj = user?.role === "teacher" ? teacherNavObj : studentNavObj;
 
@@ -81,9 +82,24 @@ const Navbar = () => {
             {user?.name.charAt(0).toUpperCase() + user?.name.slice(1)}(
             {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)})
           </p>
-          <ButtonCom onClick={handleLogout}>
-            <span style={{display:"flex", justifyContent:'center', alignItems:"center", gap:"4px"}}>
-              <img src={logout} width="15px" height="15px" style={{color:"yellow"}} />
+          <ButtonCom
+            onClick={handleLogout}
+            disabled={location.pathname === "/examForm"}
+          >
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <img
+                src={logout}
+                width="15px"
+                height="15px"
+                style={{ color: "yellow" }}
+              />
               Logout
             </span>
           </ButtonCom>

@@ -16,11 +16,11 @@ const fetchData = async ({
     if (response?.statusCode === 200) {
       setExam(response?.data);
       localStorage.setItem("questionData", JSON.stringify(response?.data));
-      let temArray =
-        !!response?.data.length &&
-        response?.data.map((val) => {
-          return { question: val?._id, answer: "" };
-        });
+      let temArray = response?.data.length
+        ? response?.data.map((val) => {
+            return { question: val?._id, answer: "" };
+          })
+        : [];
       setSelectedAnswers(temArray);
       localStorage.setItem("selectedAnswerData", JSON.stringify(temArray));
     } else {

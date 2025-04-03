@@ -38,7 +38,7 @@ const StudentResult = () => {
   return (
     <div className="studentResultContainer">
       <h1 className="resultHeading">
-        Hi,
+        Hi,{" "}
         {user?.name.charAt(0).toUpperCase() + user?.name.slice(1) || "Unknown"}.
         Your result is
       </h1>

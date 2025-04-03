@@ -9,6 +9,16 @@ table {
   border-collapse: collapse;
 }
 
+.table-error-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  padding: 20px;
+}
+
 th,
 td {
   text-align: center;
@@ -37,6 +47,6 @@ tr:hover {
   text-align: center;
   font-size: 18px;
   background: black;
-  color: red;
+  color: blue;
   padding: 20px;
 }

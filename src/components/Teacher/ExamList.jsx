@@ -25,38 +25,39 @@ const ExamList = () => {
 
   const handleExaDelete = (id) => {
     let confirmDelete = confirm("Are you sure you want to delete this exam?");
-    if (confirmDelete) {
-      dispatch(deleteExam(id, token));
-    }
+    confirmDelete && dispatch(deleteExam(id, token));
   };
+
+  const tableData = useMemo(() => {
+    return examsList?.exams?.length
+      ? examsList?.exams?.map((val) => ({
+          Subject: val.subjectName,
+          Email: val.email,
+          Notes: val.notes.join(", "),
+          "View Exam": (
+            <ButtonCom onClick={() => handleExaView(val)} color="skyblue">
+              <span className="bntIcon">
+                <img src={vision} width="20px" height="20px" />
+                View Exam
+              </span>
+            </ButtonCom>
+          ),
+          "Delete Exam": (
+            <ButtonCom onClick={() => handleExaDelete(val._id)} color="red">
+              <span className="bntIcon">
+                <img src={deleteIcon} width="15px" height="15px" />
+                Delete Exam
+              </span>
+            </ButtonCom>
+          ),
+        }))
+      : [];
+  }, [examsList]);
 
   useEffect(() => {
     dispatch(fetchExams(token));
   }, [token]);
 
-  const tableData = useMemo(() => {
-    return examsList?.exams?.map((val) => ({
-      Subject: val.subjectName,
-      Email: val.email,
-      Notes: val.notes.join(", "),
-      "View Exam": (
-        <ButtonCom onClick={() => handleExaView(val)} color="skyblue">
-          <span className="bntIcon">
-            <img src={vision} width="20px" height="20px" />
-            View Exam
-          </span>
-        </ButtonCom>
-      ),
-      "Delete Exam": (
-        <ButtonCom onClick={() => handleExaDelete(val._id)} color="red">
-          <span className="bntIcon">
-            <img src={deleteIcon} width="15px" height="15px" />
-            Delete Exam
-          </span>
-        </ButtonCom>
-      ),
-    }));
-  }, [examsList]);
   return (
     <div>
       <div style={{ maxWidth: "1100px", margin: "0px auto" }}>

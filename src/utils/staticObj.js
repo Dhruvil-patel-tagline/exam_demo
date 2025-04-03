@@ -74,3 +74,21 @@ export const resetPasswordErrorObj = {
   password: "",
   confirmPassword: "",
 };
+
+export const inputs = [
+  { id: "oldPassword", placeHolder: "Old Password" },
+  { id: "password", placeHolder: "New Password" },
+  { id: "confirmPassword", placeHolder: "Confirm Password" },
+];
+
+export const fields = [
+  { id: "name", type: "text", name: "Name", input: "input", placeholder:'Enter your name' },
+  { id: "email", type: "text", name: "Email", input: "input", placeholder:"Enter your email"},
+  { id: "password", type: "password", name: "Password", input: "password", placeholder:"Enter your password" },
+  { id: "role", name: "Role", input: "dropDown" },
+];
+
+export const links = [
+  { url: "/profile/editName", name: "Edit Name" },
+  { url: "/profile/resetPassword", name: "Change Password" },
+];

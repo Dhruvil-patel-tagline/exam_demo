@@ -11,36 +11,25 @@ import "./css/slider.css";
 import "./css/teacher.css";
 
 const AllStudent = () => {
-  const token = getCookie("authToken");
-  const allStudentArray = useSelector((state) => state.teacherStudent);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = getCookie("authToken");
+  const allStudentArray = useSelector((state) => state.teacherStudent);
 
   const [allStudent, setAllStudent] = useState(true);
   const [data, setData] = useState([]);
+
   const verifiedStudent = useMemo(() => {
     return allStudentArray?.allStudent.length
       ? allStudentArray?.allStudent.filter((val) => val.status === "Active")
       : [];
   });
 
-  useEffect(() => {
-    dispatch(allStudentList("dashboard/Teachers", token));
-  }, [token]);
-
-  useEffect(() => {
-    if (allStudent) {
-      setData(allStudentArray?.allStudent);
-    } else {
-      setData(verifiedStudent);
-    }
-  }, [allStudent, allStudentArray]);
-
   const tableData = useMemo(() => {
     return (
       !!data.length &&
       data.map((val, index) => ({
-        Index: index,
+        Index: ++index,
         Name: val.name,
         Email: val.email,
         Status:
@@ -61,6 +50,19 @@ const AllStudent = () => {
       }))
     );
   }, [data]);
+
+  useEffect(() => {
+    dispatch(allStudentList("dashboard/Teachers", token));
+  }, [token]);
+
+  useEffect(() => {
+    if (allStudent) {
+      setData(allStudentArray?.allStudent);
+    } else {
+      setData(verifiedStudent);
+    }
+  }, [allStudent, allStudentArray]);
+
   return (
     <div className="allStudentCtn">
       <div className="allStudentInner">

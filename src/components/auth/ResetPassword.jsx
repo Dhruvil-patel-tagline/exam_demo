@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import cancel from "../../assets/cancel.png";
@@ -7,7 +7,11 @@ import InputPassword from "../../shared/InputPassword";
 import Loader from "../../shared/Loader";
 import { postRequest } from "../../utils/api";
 import { getCookie } from "../../utils/getCookie";
-import { resetPasswordErrorObj, resetPasswordObj } from "../../utils/staticObj";
+import {
+  inputs,
+  resetPasswordErrorObj,
+  resetPasswordObj,
+} from "../../utils/staticObj";
 import validate from "../../utils/validate";
 import "./css/auth.css";
 
@@ -85,45 +89,20 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit} className="resetPassForm">
           <h1 className="resetPassHeading">Reset password</h1>
           <br />
-          <label htmlFor="oldPassword">Old Password:</label>
-          {error?.oldPassword && (
-            <span className="error">{error.oldPassword}</span>
-          )}
-          <InputPassword
-            placeholder="Old password..."
-            id="oldPassword"
-            name="oldPassword"
-            value={passwordObj.oldPassword}
-            onChange={handleChange}
-          />
-          <label htmlFor="newPassword">New Password:</label>
-          {error?.password && <span className="error">{error.password}</span>}
-          <InputPassword
-            placeholder="New password..."
-            id="newPassword"
-            name="password"
-            value={passwordObj.password}
-            onChange={handleChange}
-          />
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          {error?.confirmPassword && (
-            <span className="error">{error.confirmPassword}</span>
-          )}
-          <InputPassword
-            placeholder="Confirm password..."
-            id="confirmPassword"
-            name="confirmPassword"
-            value={passwordObj.confirmPassword}
-            onChange={handleChange}
-          />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "10px",
-            }}
-          >
+          {inputs.map((inp) => (
+            <Fragment key={inp.id}>
+              <label htmlFor={inp.id}>{inp.placeHolder}</label>
+              {error[inp.id] && <span className="error">{error[inp.id]}</span>}
+              <InputPassword
+                placeholder={inp.placeHolder}
+                id={inp.id}
+                name={inp.id}
+                value={passwordObj[inp.id]}
+                onChange={handleChange}
+              />
+            </Fragment>
+          ))}
+          <div className="reset-btn-container">
             <ButtonCom
               type="button"
               onClick={() => {

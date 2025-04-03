@@ -5,7 +5,6 @@ import "./pages.css";
 
 const Home = () => {
   const { pathname } = useLocation();
-
   if (pathname === "/") {
     return <Navigate to="/dashboard" />;
   }

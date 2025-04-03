@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import edit from "../../assets/edit.svg";
@@ -11,40 +11,21 @@ import { examDetailHeader } from "../../utils/staticObj";
 import "./css/teacher.css";
 
 const ExamDetail = () => {
-  const token = getCookie("authToken");
-  const examListObj = useSelector((state) => state?.editExam);
-  const { id } = useParams();
   const dispatch = useDispatch();
+  const token = getCookie("authToken");
+  const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-
-  const initialSubject = state?.subject || "";
-  const initialNotes = state?.notes || ["", ""];
-  const [examData, setExamData] = useState({
-    subjectName: initialSubject,
-    notes: initialNotes,
-    questions: [],
-  });
-  const [questions, setQuestions] = useState([]);
-
-  useEffect(() => {
-    if (examListObj?.quesArray.length) {
-      setExamData({
-        ...examData,
-        questions: examListObj?.quesArray,
-      });
-      setQuestions(examListObj?.quesArray);
-    }
-  }, [examListObj]);
+  const examListObj = useSelector((state) => state?.editExam);
 
   const handleEdit = (index) => {
     navigate(`/updateExam/${id}`, {
       state: {
-        subject: initialSubject,
-        notes: initialNotes,
+        subject: state?.subject || "",
+        notes: state?.notes || ["", ""],
         examId: id,
         currentQ: index,
-        questions: questions,
+        questions: examListObj.quesArray || [],
       },
     });
   };
@@ -54,20 +35,22 @@ const ExamDetail = () => {
   }, [id, token]);
 
   const tableData = useMemo(() => {
-    return examData?.questions?.map((q, index) => ({
-      Index: index + 1,
-      Question: q?.question,
-      Answer: q?.answer,
-      Action: (
-        <ButtonCom onClick={() => handleEdit(index)}>
-          <span className="bntIcon">
-            <img src={edit} width="18px" height="18px" />
-            Edit
-          </span>
-        </ButtonCom>
-      ),
-    }));
-  }, [examData]);
+    return examListObj?.quesArray?.length
+      ? examListObj?.quesArray?.map((q, index) => ({
+          Index: index + 1,
+          Question: q?.question,
+          Answer: q?.answer,
+          Action: (
+            <ButtonCom onClick={() => handleEdit(index)}>
+              <span className="bntIcon">
+                <img src={edit} width="18px" height="18px" />
+                Edit
+              </span>
+            </ButtonCom>
+          ),
+        }))
+      : [];
+  }, [examListObj]);
 
   return (
     <div className="examDetailRoot">

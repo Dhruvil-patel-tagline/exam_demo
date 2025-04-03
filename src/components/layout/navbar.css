@@ -44,6 +44,12 @@
 .navAnchor {
   padding: 25px;
 }
+.footer{
+  width: 100%;
+  text-align: center;
+  padding: 18px;
+  background-color: black;
+}
 
 @media (max-width: 768px) {
   .active,

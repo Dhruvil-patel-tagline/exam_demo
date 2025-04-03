@@ -6,21 +6,8 @@ const Table = ({ tableHeader, tableData, isLoading, minWidth, error }) => {
   const navigate = useNavigate();
   if (error) {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          justifyContent: "center",
-          alignItems: "center",
-          background: "black",
-          padding: "20px",
-        }}
-      >
-        <p className="no-data">
-          {" "}
-          Something went wrong. Go back or Refresh page
-        </p>
+      <div className="table-error-container">
+        <p className="no-data">Something went wrong. Go back or Refresh page</p>
         <ButtonCom onClick={() => window.location.reload(false)}>
           Refresh
         </ButtonCom>
@@ -40,11 +27,7 @@ const Table = ({ tableHeader, tableData, isLoading, minWidth, error }) => {
         <tbody>
           {isLoading ? (
             <tr>
-              <td
-                colSpan={tableHeader.length}
-                className="no-data"
-                style={{ color: "blue" }}
-              >
+              <td colSpan={tableHeader.length} className="no-data">
                 Loading...
               </td>
             </tr>
@@ -60,8 +43,7 @@ const Table = ({ tableHeader, tableData, isLoading, minWidth, error }) => {
           ) : (
             <tr>
               <td colSpan={tableHeader.length} className="no-data">
-                {" "}
-                Data not found{" "}
+                Data not found
               </td>
             </tr>
           )}

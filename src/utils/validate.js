@@ -14,7 +14,7 @@ const validate = (name, value, val2 = "") => {
     }
     case "password": {
       if (!regexPassword.test(value))
-        return "This password is invalid. 6 should be the minimum length and 30 should be the maximum.";
+        return "This password is invalid. 6 should be the minimum length and 30 should be the maximum. password should only contain letters and digits";
       return null;
     }
     case "confirmPassword": {

@@ -23,7 +23,7 @@ const EditProfile = () => {
   const [name, setName] = useState("");
 
   const handleChange = (e) => {
-    setName(e.target.value.trim());
+    setName(e.target.value);
     if (error) {
       setError(validate(e.target.name, e.target.value));
       if (e.target.value.trim() === data?.name.trim()) {
@@ -38,9 +38,6 @@ const EditProfile = () => {
     let value = validate("name", name);
     if (value) {
       setError(value);
-      return;
-    }
-    if (error) {
       return;
     }
     try {

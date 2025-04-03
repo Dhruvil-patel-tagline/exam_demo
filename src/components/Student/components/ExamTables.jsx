@@ -15,6 +15,7 @@ const ExamTables = ({
   handleEditAnswer,
   remainingDataFun,
 }) => {
+
   const remainingAnswerData = useMemo(() => {
     return remainingAnswer.map((q, idx) => ({
       Index: idx + 1,
@@ -30,9 +31,6 @@ const ExamTables = ({
       ),
     }));
   }, [remainingAnswer]);
-  useEffect(() => {
-    remainingDataFun(remainingAnswerData);
-  }, [remainingAnswerData]);
 
   const tableData = useMemo(() => {
     return exam.map((q, idx) => ({
@@ -49,6 +47,11 @@ const ExamTables = ({
       ),
     }));
   }, [exam, selectedAnswers]);
+
+  useEffect(() => {
+    remainingDataFun(remainingAnswerData);
+  }, [remainingAnswerData]);
+
   return (
     <div className="remainingAnsContainer">
       <div>

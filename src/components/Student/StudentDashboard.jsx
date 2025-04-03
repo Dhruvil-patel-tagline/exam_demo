@@ -17,13 +17,6 @@ const StudentDashboard = () => {
     (state) => state.examList,
   );
 
-  useEffect(() => {
-    dispatch(studentExamsAction());
-      localStorage.removeItem("selectedAnswerData");
-      localStorage.removeItem("timeLeftData");
-      localStorage.removeItem("questionData");
-  }, [token]);
-
   const tableData = useMemo(() => {
     return exams.map((val, index) => ({
       Index: index + 1,
@@ -61,6 +54,13 @@ const StudentDashboard = () => {
       ),
     }));
   }, [exams, pendingExam]);
+
+  useEffect(() => {
+    dispatch(studentExamsAction());
+    localStorage.removeItem("selectedAnswerData");
+    localStorage.removeItem("timeLeftData");
+    localStorage.removeItem("questionData");
+  }, [token]);
 
   return (
     <div style={{ padding: "20px" }}>

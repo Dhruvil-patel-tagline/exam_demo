@@ -50,7 +50,7 @@ const NewPassword = () => {
         setTimeout(() => {
           window.open("/login", "_blank");
           window.close();
-        }, 5000);
+        }, 3000);
         setData({ password: "", confirmPassword: "" });
       } else {
         toast.error(response?.message);

@@ -12,6 +12,7 @@ import "./css/auth.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  
   const [user, setUser] = useState(userObj);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(errorObj);

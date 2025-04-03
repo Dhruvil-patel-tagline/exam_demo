@@ -9,7 +9,8 @@ import validate from "../../utils/validate";
 import "./css/auth.css";
 
 const ForgetPassword = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,35 +18,29 @@ const ForgetPassword = () => {
   const handleChange = (e) => {
     const value = e.target.value;
     setEmail(value.trim());
-    if (error) {
-      setError(validate(e.target.name, value));
-    }
+    error && setError(validate(e.target.name, value));
   };
 
-  const searchUser = async () => {
-    try {
-      setLoading(true);
-      let response = await postRequest("users/ForgotPassword", {
-        data: { email },
-        errorMessage: "User not fond",
-      });
-      if (response.statusCode === 200) {
-        toast.success(response?.message);
-        navigate("/login");
-      } else {
-        toast.error(response?.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let emailValidate = validate("email", email);
     setError(emailValidate);
     if (!emailValidate) {
-      searchUser();
+      try {
+        setLoading(true);
+        let response = await postRequest("users/ForgotPassword", {
+          data: { email },
+          errorMessage: "User not fond",
+        });
+        if (response.statusCode === 200) {
+          toast.success(response?.message);
+          navigate("/login");
+        } else {
+          toast.error(response?.message || "User not fond");
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

@@ -26,6 +26,7 @@ const TeacherForm = () => {
   const navigate = useNavigate();
   const { state, pathname } = useLocation();
   const isUpdateForm = pathname.includes("updateExam");
+
   const [currentQuestion, setCurrentQuestion] = useState(state?.currentQ || 0);
   const [allQuestionError, setAllQuestionError] = useState(
     Array(TOTAL_QUESTIONS).fill(false),
@@ -45,8 +46,6 @@ const TeacherForm = () => {
         })),
     notes: state?.notes || ["", ""],
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFormReset, setIsFormReset] = useState(false);
 
   const isDuplicateQuestion = (index, value) => {
     return examData.questions.some(
@@ -141,8 +140,9 @@ const TeacherForm = () => {
       setError(errors);
       if (result) {
         if (!result.every((val) => val)) {
-          errors.queError = "Please fill out all the question";
-          toast.error("Please fill out all the question");
+          errors.queError =
+            "Please fill out all the question";
+          toast.error("Please fill out all the details");
         }
       }
       return Object.values(errors).every((val) => !val);
@@ -154,7 +154,11 @@ const TeacherForm = () => {
     e.preventDefault();
     let result = handleQuestionSave(currentQuestion);
     if (!handleValidate(result)) return;
-    setIsSubmitting(true);
+    if (isUpdateForm) {
+      dispatch(updateExam(examData, state?.examId, token, navigate));
+    } else {
+      dispatch(createExam(examData, token, navigate));
+    }
   };
 
   const resetForm = () => {
@@ -172,25 +176,8 @@ const TeacherForm = () => {
     setQuestionsError(questionsErrorObj);
     setAllQuestionError(Array(TOTAL_QUESTIONS).fill(false));
     setError(teacherErrorObj);
-    setIsFormReset(true);
+    setCurrentQuestion(0);
   };
-
-  useEffect(() => {
-    if (isSubmitting) {
-      if (isUpdateForm) {
-        dispatch(updateExam(examData, state?.examId, token, navigate));
-      } else {
-        dispatch(createExam(examData, token, navigate));
-      }
-    }
-  }, [isSubmitting]);
-
-  useEffect(() => {
-    if (isFormReset) {
-      setCurrentQuestion(0);
-      setIsFormReset(false);
-    }
-  }, [isFormReset]);
 
   useEffect(() => {
     if (state?.questions) {

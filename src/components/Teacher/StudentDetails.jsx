@@ -15,26 +15,24 @@ const StudentDetails = () => {
   const [studentData, setStudentData] = useState({});
 
   const tableData = useMemo(() => {
-    let index = 1;
-    return (
-      studentData?.Result &&
-      studentData?.Result.map((val) => ({
-        Index: index++,
-        Subject: val.subjectName,
-        Score:
-          val.score <= 3 ? (
-            <span style={{ color: "red" }}>{val.score}</span>
-          ) : (
-            <span style={{ color: "green" }}>{val.score}</span>
-          ),
-        Rank:
-          val.rank <= 3 ? (
-            <span style={{ color: "blue" }}>{val.rank}</span>
-          ) : (
-            <span style={{ color: "green" }}>{val.rank}</span>
-          ),
-      }))
-    );
+    return studentData?.Result?.length
+      ? studentData?.Result.map((val, index) => ({
+          Index: ++index,
+          Subject: val.subjectName,
+          Score:
+            val.score <= 3 ? (
+              <span style={{ color: "red" }}>{val.score}</span>
+            ) : (
+              <span style={{ color: "green" }}>{val.score}</span>
+            ),
+          Rank:
+            val.rank <= 3 ? (
+              <span style={{ color: "blue" }}>{val.rank}</span>
+            ) : (
+              <span style={{ color: "green" }}>{val.rank}</span>
+            ),
+        }))
+      : [];
   }, [studentData]);
 
   useEffect(() => {

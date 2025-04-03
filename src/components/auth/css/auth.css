@@ -75,3 +75,10 @@
   gap: 5px;
   color: red;
 }
+
+.reset-btn-container{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
